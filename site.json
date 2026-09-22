@@ -1,0 +1,9 @@
+{
+  "title": "认知空间",
+  "description": "一个让沉淀内容随着注意力逐层显现的个人认知空间。",
+  "language": "zh-CN",
+  "base_path": "/MyBlog/",
+  "content_dir": "content",
+  "output_dir": "dist",
+  "max_visible_nodes": 18
+}

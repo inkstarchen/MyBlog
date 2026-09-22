@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ summary }}">
+  <title>{{ title }} · 微小迭代</title>
+  <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+  <header class="site-header compact">
+    <a class="brand" href="../index.html">微小迭代</a>
+    <a class="back" href="../index.html">← 返回文章</a>
+  </header>
+  <main>
+    <article class="article">
+      <time datetime="{{ date }}">{{ date }}</time>
+      {{ content }}
+    </article>
+  </main>
+  <footer>用 Python 生成 · 保持简单</footer>
+</body>
+</html>
