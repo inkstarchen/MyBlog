@@ -36,6 +36,8 @@ order: 20
 
 ## 本地部署
 
+首次运行请先参阅 [环境搭建与运行指南](ENVIRONMENT_SETUP.md)，其中包含 Windows、macOS、Linux 的 Python 安装、验证、故障排查和可选发布环境配置。
+
 最简单的方式是：
 
 ```shell
