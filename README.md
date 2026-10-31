@@ -1,5 +1,7 @@
 # 认知空间
 
+首页底部的箴言在 `site.json` 的 `home_motto` 字段中填写。生成器会按文字宽度和标点自动分成长度接近的两行；留空时不显示。修改后运行 `python build.py` 重新生成网站。
+
 这是一个由 Python 生成的静态网站。内容按文件夹形成层级，浏览时通过同一个空间舞台切换，生成后可直接部署到 GitHub Pages。
 
 ## 添加内容
@@ -92,7 +94,7 @@ python build.py
 
 ### 手动发布到 gh-pages 分支
 
-项目已经提供独立发布脚本。它会重新生成网站，在临时目录创建一个只包含 `dist` 内容的提交，然后推送到远程 `gh-pages` 分支；当前源码分支和工作目录不会被切换或清理。
+项目已经提供独立发布脚本。在 `main` 分支运行时，它会重新生成网站，将源代码提交并推送到远程 `main`，然后在临时目录创建一个只包含 `dist` 内容的提交并推送到远程 `gh-pages`。`dist/` 会从 `main` 的跟踪文件中移除，生成文件仍保留在本地。脚本不会切换或清理当前工作目录。
 
 首次使用前，确保项目已经是 Git 仓库并配置了 GitHub 远程：
 
@@ -112,9 +114,10 @@ Windows 也可以双击 `deploy-gh-pages.bat`。
 其他选项：
 
 ```shell
-python deploy.py --dry-run                 # 生成发布提交，但不推送
+python deploy.py --dry-run                 # 预演发布，不提交或推送
 python deploy.py --no-build                # 直接发布现有 dist
 python deploy.py --message "更新认知空间"  # 自定义提交信息
+python deploy.py --source-message "更新源码" # 自定义 main 提交信息
 python deploy.py --remote upstream         # 使用其他远程名称
 ```
 

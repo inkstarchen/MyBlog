@@ -255,7 +255,7 @@ a { color: inherit; }
   -webkit-line-clamp: 2;
 }
 
-.hint,
+.home-motto,
 .empty-orbit {
   position: absolute;
   z-index: 4;
@@ -271,6 +271,9 @@ a { color: inherit; }
 }
 
 .empty-orbit { top: calc(50% + 11rem); bottom: auto; }
+.home-motto { width: min(94vw, 44rem); line-height: 1.8; text-align: center; white-space: normal; }
+.motto-line { display: block; white-space: nowrap; }
+.home-motto[hidden] { display: none; }
 
 .content-panel {
   position: fixed;
@@ -318,14 +321,14 @@ a { color: inherit; }
 body.reading-mode .core { left: 25%; width: clamp(11.5rem, 20vw, 15.5rem); }
 body.reading-mode .orbit { opacity: 0; pointer-events: none; transition: opacity .35s ease; }
 body.reading-mode .depth-label { opacity: 0; transition: opacity .3s ease; }
-body.reading-mode .hint { left: 25%; }
+body.reading-mode .home-motto { opacity: 0; pointer-events: none; }
 body.reading-leaving .core { left: 25%; width: clamp(11.5rem, 20vw, 15.5rem); }
 body.reading-leaving .orbit,
 body.reading-leaving .depth-label,
-body.reading-leaving .hint { opacity: 0; pointer-events: none; }
+body.reading-leaving .home-motto { opacity: 0; pointer-events: none; }
 body.orbit-held .orbit,
 body.orbit-held .depth-label,
-body.orbit-held .hint { opacity: 0; pointer-events: none; }
+body.orbit-held .home-motto { opacity: 0; pointer-events: none; }
 
 .reading-scrollbar {
   position: fixed;
@@ -436,10 +439,10 @@ body.reduced-motion *::after {
   .core-copy strong { font-size: 1.25rem; }
   .core-copy > span:last-child { display: none; }
   .orbit-link { min-width: 5.5rem; padding: .65rem; font-size: .92rem; }
-  .hint { bottom: 3%; font-size: .68rem; }
+  .home-motto { bottom: 3%; font-size: .68rem; }
   body.reading-mode .core { top: 23%; left: 50%; width: min(42vw, 10.5rem); }
   body.reading-leaving .core { top: 23%; left: 50%; width: min(42vw, 10.5rem); }
-  body.reading-mode .hint { display: none; }
+  body.reading-mode .home-motto { display: none; }
   .content-panel {
     top: 43%;
     right: 3.2rem;
@@ -453,7 +456,7 @@ body.reduced-motion *::after {
 
 @media (max-height: 600px) {
   .depth-label { display: none; }
-  .hint { bottom: 2%; }
+  .home-motto { bottom: 2%; }
   .core { width: 10rem; }
 }
 

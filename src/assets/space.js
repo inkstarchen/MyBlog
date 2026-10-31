@@ -18,7 +18,7 @@
   const articleBody = document.getElementById("article-body");
   const readingScrollbar = document.getElementById("reading-scrollbar");
   const readingThumb = document.getElementById("reading-thumb");
-  const spaceHint = document.getElementById("space-hint");
+  const homeMotto = document.getElementById("home-motto");
   const status = document.getElementById("space-status");
   const motionToggle = document.getElementById("motion-toggle");
   const scriptUrl = new URL(document.currentScript.src);
@@ -235,9 +235,6 @@
     readingScrollbar.setAttribute("aria-hidden", String(!open));
     readingScrollbar.tabIndex = open ? 0 : -1;
     core.setAttribute("aria-expanded", String(open));
-    spaceHint.textContent = open
-      ? "上下滑动阅读 · 返回上一级可收起"
-      : "选择一个主题，慢慢深入 · 点击中心阅读";
     if (options.reset) contentPanel.scrollTop = 0;
     if (open) {
       requestAnimationFrame(() => {
@@ -264,7 +261,6 @@
     readingScrollbar.setAttribute("aria-hidden", "true");
     readingScrollbar.tabIndex = -1;
     core.setAttribute("aria-expanded", "false");
-    spaceHint.textContent = "选择一个主题，慢慢深入 · 点击中心阅读";
 
     await new Promise((resolve) => window.setTimeout(resolve, 790));
     document.body.classList.remove("reading-leaving");
@@ -274,6 +270,18 @@
 
   function syncReadingMode() {
     setReadingMode(currentIsLeaf(), { reset: true });
+    homeMotto.hidden = currentPath !== "" || !homeMotto.textContent.trim();
+  }
+
+  function fitMotto() {
+    if (homeMotto.hidden || !homeMotto.textContent.trim()) return;
+    homeMotto.style.fontSize = "";
+    const lines = homeMotto.querySelectorAll(".motto-line");
+    const widest = Math.max(...Array.from(lines, (line) => line.scrollWidth));
+    if (widest > homeMotto.clientWidth) {
+      const baseSize = parseFloat(getComputedStyle(homeMotto).fontSize);
+      homeMotto.style.fontSize = `${baseSize * homeMotto.clientWidth / widest}px`;
+    }
   }
 
   async function navigate(path, options = {}) {
@@ -312,6 +320,7 @@
     updateChrome();
     renderOrbit(true);
     syncReadingMode();
+    fitMotto();
     document.body.classList.remove("orbit-held");
     if (!options.fromHistory) history.pushState({ path }, "", nodeUrl(path));
     status.textContent = `已进入${nodes[path].title}，第 ${path.split("/").filter(Boolean).length} 层`;
@@ -382,6 +391,7 @@
   window.addEventListener("resize", () => {
     updateParticleTargets();
     updateReadingScrollbar();
+    fitMotto();
   });
   motionToggle.addEventListener("click", () => {
     manualReducedMotion = !manualReducedMotion;
@@ -396,6 +406,7 @@
   motionToggle.textContent = manualReducedMotion ? "恢复动态" : "减弱动态";
   renderOrbit(false);
   syncReadingMode();
+  fitMotto();
   history.replaceState({ path: currentPath }, "", window.location.href);
   animationFrame = requestAnimationFrame(tick);
 

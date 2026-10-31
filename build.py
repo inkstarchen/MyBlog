@@ -6,6 +6,7 @@ import html
 import json
 import re
 import shutil
+import unicodedata
 from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -254,6 +255,30 @@ def breadcrumbs(node: Node, nodes: dict[str, Node]) -> str:
     )
 
 
+def motto_lines(text: str) -> list[str]:
+    text = " ".join(text.split())
+    if len(text) < 2:
+        return [text] if text else []
+
+    def width(value: str) -> int:
+        return sum(2 if unicodedata.east_asian_width(char) in "FW" else 1 for char in value)
+
+    punctuation = "，。！？；、：,.!?;:"
+    opening = "（《〈【「『([{"
+    closing = "，。！？；、：,.!?;:）》。〉】」』)]}"
+    candidates = []
+    for index in range(1, len(text)):
+        left, right = text[:index].rstrip(), text[index:].lstrip()
+        if not left or not right or left[-1] in opening or right[0] in closing:
+            continue
+        boundary_penalty = 0 if left[-1] in punctuation else 2 if text[index - 1].isspace() else 5
+        candidates.append((abs(width(left) - width(right)) + boundary_penalty, index, left, right))
+    if not candidates:
+        return [text]
+    _, _, first, second = min(candidates)
+    return [first, second]
+
+
 def page_html(node: Node, nodes: dict[str, Node], config: dict[str, Any]) -> str:
     depth = len([part for part in node.path.split("/") if part])
     depth_text = "起点" if depth == 0 else f"第 {depth} 层"
@@ -263,7 +288,9 @@ def page_html(node: Node, nodes: dict[str, Node], config: dict[str, Any]) -> str
     panel_hidden = "false" if is_leaf else "true"
     panel_tabindex = "0" if is_leaf else "-1"
     core_expanded = "true" if is_leaf else "false"
-    hint_text = "上下滑动阅读 · 返回上一级可收起" if is_leaf else "选择一个主题，慢慢深入 · 点击中心阅读"
+    home_motto = str(config.get("home_motto") or "").strip()
+    motto_html = "".join(f'<span class="motto-line">{html.escape(line)}</span>' for line in motto_lines(home_motto))
+    motto_hidden = "" if not node.path and home_motto else " hidden"
     asset_prefix = "../" * depth + "assets/"
     graph = {path: item.public() for path, item in nodes.items()}
     data_json = json.dumps(
@@ -323,7 +350,7 @@ def page_html(node: Node, nodes: dict[str, Node], config: dict[str, Any]) -> str
         <span id="core-description">{html.escape(node.description)}</span>
       </span>
     </button>
-    <p class="hint" id="space-hint">{hint_text}</p>
+    <p class="home-motto" id="home-motto"{motto_hidden}>{motto_html}</p>
   </main>
 
   <aside class="{panel_class}" id="content-panel" aria-hidden="{panel_hidden}" tabindex="{panel_tabindex}" aria-label="笔记内容">
